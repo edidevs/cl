@@ -1,19 +1,11 @@
 import React from 'react';
-// import { Provider } from 'react-redux';
-// import configureStore from './src/store';
+
 import CardView from 'react-native-rn-cardview';
 const moment = require('moment');
-// const MomentRange = require('moment-range');
-// const moment = MomentRange.extendMoment(Moment);
-// let dateArray = require('moment-array-dates');
+
 
 import { View, Text, FlatList, TouchableOpacity, TouchableHighlight } from 'react-native';
 
-// import { Card } from "@paraboly/react-native-card";
-
-// import { PersistGate } from 'redux-persist/integration/react';
-
-// const { persistor, store} = configureStore();
 export default class App extends React.Component {
 
 
