@@ -334,11 +334,7 @@ export default class App extends React.Component {
     
     
     return (
-      // <Provider store={store}>
-      //  <PersistGate loading={null} persistor={persistor} >
-      //   <Router />
-      //   </PersistGate>
-      // </Provider>
+      
       <View style={{flex:4}}>
         <Text style={{fontSize:22, fontWeight:'bold', marginBottom:0, paddingRight:0, paddingLeft:28, paddingTop:20, paddingBottom:3}}>Daily Deals</Text>
         
@@ -346,11 +342,6 @@ export default class App extends React.Component {
           
                 <View style={{flex:1}}>
   
-                {/* <Text>{}</Text> */}
-                {/* {this.state.data[0].map( (value) => {
-                <Text>{value}</Text>
-                })} */}
-                {/* {console.log("ITEM DATA === ", this.state.data.data)} */}
                 <View style={{paddingRight:0, paddingLeft:25, paddingTop:0, paddingBottom:0}}>
                 <FlatList
                 horizontal={true}
