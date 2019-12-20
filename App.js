@@ -28,7 +28,9 @@ export default class App extends React.Component {
       sat:null,
       selected:false,
       all:null,
-      index:null
+      index:null,
+      discount:null,
+      selectedDeal:false
       
       
 
@@ -146,12 +148,29 @@ export default class App extends React.Component {
     })
   }
 
+  findMaxDiscount = async (arr) => {
+    let discounts = [];
+    await arr.map((item) => {
+        discounts.push(item.discount);
+    });
+    
+    let result = await discounts.reduce(function (p, v) {
+     
+      return ( p > v ? p : v );
+    });
+   
+    return result; 
+  }
+
   async componentDidMount(){
       
 
       await this.onGetData();
       await this.showData();
       this.selectDeals(new Date().getDay()+1, 0);
+      
+
+      
       
       
       
@@ -167,10 +186,14 @@ export default class App extends React.Component {
           if empty then move to next deal until there is data found, 
           not really recursive */
           if(this.state.sun.length>0){
+            let discount = await this.findMaxDiscount(this.state.sun);
+            
             this.setState({
               all:this.state.sun,
               selected:true,
-              index:index
+              index:index,
+              discount:discount,
+              active:true
             });
           }else{
             this.selectDeals(value+1, index);
@@ -180,10 +203,14 @@ export default class App extends React.Component {
           break;
        case 2: 
           if(this.state.mon.length>0){
+            let discount = await this.findMaxDiscount(this.state.mon);
+            
             this.setState({
               all:this.state.mon,
               selected:true,
-              index:index
+              index:index,
+              discount: discount,
+              active:true,
             });
           }else{
             this.selectDeals(value+1, index);
@@ -192,10 +219,14 @@ export default class App extends React.Component {
           break;
        case 3: 
           if(this.state.tue.length>0){
+            let discount = await this.findMaxDiscount(this.state.tue);
+            
             this.setState({
               all:this.state.tue,
               selected:true,
-              index:index
+              index:index,
+              discount:discount,
+              active:true
             });
           }else{
             this.selectDeals(value+1, index);
@@ -204,10 +235,14 @@ export default class App extends React.Component {
           break;
       case 4:
           if(this.state.wed.length>0){
+            let discount = await this.findMaxDiscount(this.state.sun);
+           
             this.setState({
               all:this.state.wed,
               selected:true,
-              index:index
+              index:index,
+              discount:discount,
+              active:true
             });
           }else{
             this.selectDeals(value+1,index);
@@ -216,10 +251,14 @@ export default class App extends React.Component {
           break;
       case 5:
           if(this.state.thu.length>0){
+            let discount = await this.findMaxDiscount(this.state.sun);
+            
             this.setState({
               all:this.state.thu,
               selected:true,
-              index:index
+              index:index,
+              discount:discount,
+              active:true
             }); 
           }else{
             this.selectDeals(value+1, index);
@@ -228,10 +267,15 @@ export default class App extends React.Component {
           break;
       case 6:
           if(this.state.fri.length>0){
+            let discount = await this.findMaxDiscount(this.state.sun);
+            
+            
             this.setState({
               all:this.state.fri,
               selected:true,
-              index:index
+              index:index,
+              discount:discount,
+              active:true
             });
           }else{
             this.selectDeals(value+1, index);
@@ -240,10 +284,14 @@ export default class App extends React.Component {
           break;
       case 7:
           if(this.state.sat.length>0){
+            let discount = await this.findMaxDiscount(this.state.sun);
+            
             this.setState({
               all:this.state.sat,
               selected:true,
-              index:index
+              index:index,
+              discount:discount,
+              active:true
             });
           }else{
             this.selectDeals(1, index);
@@ -256,7 +304,7 @@ export default class App extends React.Component {
   };
 
   render() {
-
+    
 
     const deals = 
               <View style={{flex:1, height:200, marginTop:0, paddingRight:0, paddingLeft:0, paddingTop:0, paddingBottom:0, backgroundColor:'#F9F9F9'}}>
@@ -276,8 +324,12 @@ export default class App extends React.Component {
                 onPress={() => {
                 this.setState({
                 active: true,
-                id: index
+                id: index,
+                selectedDeal: true
                 })
+                }}
+                onPress= { () => {
+                  console.log("PRESSED with no action")
                 }}
                 style={{height:100}}
               >
@@ -287,10 +339,10 @@ export default class App extends React.Component {
                 radius={10}
                 
                 backgroundColor={'#FFFFFF'}>
-                <View style={ (this.state.active && this.state.id === index) ?  {width:103, height:60, backgroundColor:'#FB4D63', alignItems:'center', justifyContent:'center'} : {width:103, height:60, alignItems:'center', justifyContent:'center'}}>
+                <View style={ (this.state.active && (this.state.selectedDeal ? this.state.id === index : this.state.discount === item.discount) ) ?  {width:103, height:60, backgroundColor:'#FB4D63', alignItems:'center', justifyContent:'center'} : {width:103, height:60, alignItems:'center', justifyContent:'center'}}>
                   <View style={{alignItems:'center', justifyContent:'center', marginRight:20, marginBottom:15}}>
-                    <Text style={(this.state.active && this.state.id === index ? {marginTop:15, fontSize:10,color:'white'}:{marginTop:15, fontSize:10,color:'#FB4D64'})}>{item.start_time}pm</Text>
-                    <Text style={(this.state.active && this.state.id === index ? { fontSize:17, color:'white'}:{ fontSize:17,color:'#FB4D64'})}>{item.discount}%</Text>
+                    <Text style={(this.state.active  && (this.state.selectedDeal ? this.state.id === index : this.state.discount === item.discount) ? {marginTop:15, fontSize:10,color:'white'}:{marginTop:15, fontSize:10,color:'#FB4D64'})}>{item.start_time}pm</Text>
+                    <Text style={(this.state.active  && (this.state.selectedDeal ? this.state.id === index : this.state.discount === item.discount) ? { fontSize:17, color:'white'}:{ fontSize:17,color:'#FB4D64'})}>{item.discount}%</Text>
                   </View>
                  
                     
