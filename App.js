@@ -193,7 +193,8 @@ export default class App extends React.Component {
               selected:true,
               index:index,
               discount:discount,
-              active:true
+              active:true,
+              selectedDeal:false
             });
           }else{
             this.selectDeals(value+1, index);
@@ -211,6 +212,7 @@ export default class App extends React.Component {
               index:index,
               discount: discount,
               active:true,
+              selectedDeal:false
             });
           }else{
             this.selectDeals(value+1, index);
@@ -226,7 +228,8 @@ export default class App extends React.Component {
               selected:true,
               index:index,
               discount:discount,
-              active:true
+              active:true,
+              selectedDeal:false
             });
           }else{
             this.selectDeals(value+1, index);
@@ -242,7 +245,8 @@ export default class App extends React.Component {
               selected:true,
               index:index,
               discount:discount,
-              active:true
+              active:true,
+              selectedDeal:false
             });
           }else{
             this.selectDeals(value+1,index);
@@ -258,7 +262,8 @@ export default class App extends React.Component {
               selected:true,
               index:index,
               discount:discount,
-              active:true
+              active:true,
+              selectedDeal:false
             }); 
           }else{
             this.selectDeals(value+1, index);
@@ -275,7 +280,8 @@ export default class App extends React.Component {
               selected:true,
               index:index,
               discount:discount,
-              active:true
+              active:true,
+              selectedDeal:false
             });
           }else{
             this.selectDeals(value+1, index);
@@ -291,7 +297,8 @@ export default class App extends React.Component {
               selected:true,
               index:index,
               discount:discount,
-              active:true
+              active:true,
+              selectedDeal:false
             });
           }else{
             this.selectDeals(1, index);
@@ -328,9 +335,9 @@ export default class App extends React.Component {
                 selectedDeal: true
                 })
                 }}
-                onPress= { () => {
-                  console.log("PRESSED with no action")
-                }}
+                // onPress= { () => {
+                //   console.log("PRESSED with no action")
+                // }}
                 style={{height:100}}
               >
               <View style={{flex:1,marginTop: 0, height:80, alignItems:'center', justifyContent:'center'}}>
