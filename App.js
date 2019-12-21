@@ -54,7 +54,7 @@ export default class App extends React.Component {
     }
   };
 
-  showData = async () => {
+  showData = () => {
     let sun = [];
     let mon = [];
     let tue = [];
@@ -62,7 +62,7 @@ export default class App extends React.Component {
     let thu = [];
     let fri = [];
     let sat = [];
-    await this.state.data.data.map(item => {
+    this.state.data.data.map(item => {
       switch (item.day_of_week.toString()) {
         case '1':
           this.pushDeal(item, sun);
@@ -98,13 +98,13 @@ export default class App extends React.Component {
     });
   };
 
-  findMaxDiscount = async arr => {
+  findMaxDiscount = arr => {
     let discounts = [];
-    await arr.map(item => {
+    arr.map(item => {
       discounts.push(item.discount);
     });
 
-    let result = await discounts.reduce(function(p, v) {
+    let result = discounts.reduce(function(p, v) {
       return p > v ? p : v;
     });
 
