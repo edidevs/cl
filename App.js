@@ -130,11 +130,11 @@ export default class App extends React.Component {
     });
   };
 
-  selectDeals = async (value, index) => {
+  selectDeals = (value, index) => {
     switch (value) {
       case 1:
-        /*check whether the data is empty or not, 
-          if empty then move to next deal until there is data found, 
+        /*check whether the data is empty or not,
+          if empty then move to next deal until there is data found,
           not really recursive */
         if (this.state.sun.length > 0) {
           this.getEachDeal(this.state.sun, index);
