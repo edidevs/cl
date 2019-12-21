@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 
@@ -61,7 +62,7 @@ export default class App extends React.Component {
       });
   };
 
-  pushDeal = (item, day, all) => {
+  pushDeal = (item, day) => {
     if (item.active === 1) {
       day.push(item);
     }
@@ -75,30 +76,14 @@ export default class App extends React.Component {
     let thu = [];
     let fri = [];
     let sat = [];
+    let days = [sun, mon, tue, wed, thu, fri, sat];
+
     let all = [];
     this.state.data.data.map(item => {
-      switch (item.day_of_week.toString()) {
-        case '0':
-          this.pushDeal(item, sun);
-          break;
-        case '1':
-          this.pushDeal(item, mon);
-          break;
-        case '2':
-          this.pushDeal(item, tue);
-          break;
-        case '3':
-          this.pushDeal(item, wed);
-          break;
-        case '4':
-          this.pushDeal(item, thu);
-          break;
-        case '5':
-          this.pushDeal(item, fri);
-          break;
-        case '6':
-          this.pushDeal(item, sat);
-          break;
+      for (let i = 0; i < days.length; i++) {
+        if (item.day_of_week === i) {
+          this.pushDeal(item, days[i]);
+        }
       }
     });
     all.push(
@@ -204,66 +189,19 @@ export default class App extends React.Component {
   };
 
   selectDeals = (value, index) => {
-    switch (value) {
-      case 1:
-        /*check whether the data is empty or not,
-          if empty then move to next deal until there is data found,
-          not really recursive */
-        if (this.state.sun.length > 0) {
-          this.getEachDeal(this.state.sun, index);
-        } else {
-          this.selectDeals(value + 1, index + 1);
-        }
-
-        break;
-      case 2:
-        if (this.state.mon.length > 0) {
-          this.getEachDeal(this.state.mon, index);
-        } else {
-          this.selectDeals(value + 1, index + 1);
-        }
-
-        break;
-      case 3:
-        if (this.state.tue.length > 0) {
-          this.getEachDeal(this.state.tue, index);
-        } else {
-          this.selectDeals(value + 1, index + 1);
-        }
-
-        break;
-      case 4:
-        if (this.state.wed.length > 0) {
-          this.getEachDeal(this.state.wed, index);
-        } else {
-          this.selectDeals(value + 1, index + 1);
-        }
-
-        break;
-      case 5:
-        if (this.state.thu.length > 0) {
-          this.getEachDeal(this.state.thu, index);
-        } else {
-          this.selectDeals(value + 1, index + 1);
-        }
-
-        break;
-      case 6:
-        if (this.state.fri.length > 0) {
-          this.getEachDeal(this.state.fri, index);
-        } else {
-          this.selectDeals(value + 1, index + 1);
-        }
-
-        break;
-      case 7:
-        if (this.state.sat.length > 0) {
-          this.getEachDeal(this.state.sat, index);
-        } else {
-          this.selectDeals(value + 1, index + 1);
-        }
-
-        break;
+    let daysInWeek = [
+      this.state.sun,
+      this.state.mon,
+      this.state.tue,
+      this.state.wed,
+      this.state.thu,
+      this.state.fri,
+      this.state.sat,
+    ];
+    if (daysInWeek[value - 1].length > 0) {
+      this.getEachDeal(daysInWeek[value - 1], index);
+    } else {
+      this.selectDeals(value + 1, index + 1);
     }
   };
 
@@ -369,32 +307,7 @@ export default class App extends React.Component {
                         <TouchableOpacity
                           onPress={() => {
                             // let lists = [];
-                            switch (dayOfTheWeek) {
-                              //if it is sunday
-                              case '1':
-                                this.selectDeals(1, index);
-                                break;
-                              case '2':
-                                this.selectDeals(2, index);
-                                break;
-                              case '3':
-                                this.selectDeals(3, index);
-                                break;
-                              case '4':
-                                this.selectDeals(4, index);
-                                break;
-                              case '5':
-                                this.selectDeals(5, index);
-                                break;
-                              case '6':
-                                this.selectDeals(6, index);
-                                break;
-                              case '7':
-                                this.selectDeals(7, index);
-                                break;
-                              default:
-                                break;
-                            }
+                            this.selectDeals(parseInt(dayOfTheWeek), index);
                           }}
                           style={{height: 70, marginLeft: 0}}>
                           <CardView
