@@ -41,6 +41,7 @@ export default class App extends React.Component {
       emptyFri: null,
       emptySat: null,
       idDeal: null,
+      allDeal: null,
     };
   }
 
@@ -191,7 +192,7 @@ export default class App extends React.Component {
     let discount = await this.findMaxDiscount(day);
     let idDeal = await this.findIndexOfMaxDisount(day);
     this.setState({
-      all: day,
+      allDeal: day,
       selected: true,
       index: index,
       discount: discount,
@@ -275,7 +276,7 @@ export default class App extends React.Component {
           <FlatList
             horizontal={true}
             style={{flexGrow: 0}}
-            data={this.state.all}
+            data={this.state.allDeal}
             renderItem={({item, index}) => {
               return (
                 <TouchableOpacity
