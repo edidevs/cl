@@ -5,6 +5,8 @@ import CardView from 'react-native-rn-cardview';
 const moment = require('moment');
 
 import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {dates} from './utils/date';
+import Colors from './styles/Colors';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -195,6 +197,8 @@ export default class App extends React.Component {
   };
 
   render() {
+    //generate dates
+    let listDates = dates();
     const deals = (
       <View style={styles.containerDeals}>
         <View style={styles.subContainerDeals}>
@@ -218,7 +222,7 @@ export default class App extends React.Component {
                       cardElevation={5}
                       maxCardElevation={5}
                       radius={10}
-                      backgroundColor={'#FFFFFF'}>
+                      backgroundColor={Colors.white}>
                       <View
                         style={
                           this.state.active &&
@@ -239,7 +243,7 @@ export default class App extends React.Component {
                                 : {
                                     marginTop: 15,
                                     fontSize: 10,
-                                    color: '#FB4D64',
+                                    color: Colors.semiPink,
                                   }
                             }>
                             {item.start_time}pm
@@ -251,7 +255,7 @@ export default class App extends React.Component {
                                 ? this.state.id === index
                                 : this.state.discount === item.discount)
                                 ? {fontSize: 17, color: 'white'}
-                                : {fontSize: 17, color: '#FB4D64'}
+                                : {fontSize: 17, color: Colors.semiPink}
                             }>
                             {item.discount}%
                           </Text>
@@ -267,45 +271,6 @@ export default class App extends React.Component {
       </View>
     );
 
-    let dates = [];
-    let date = new Date();
-    let days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-    let months = [
-      'JAN',
-      'FEB',
-      'MAR',
-      'APR',
-      'MAY',
-      'JUN',
-      'JUL',
-      'AUG',
-      'SEP',
-      'OCT',
-      'NOV',
-      'DES',
-    ];
-
-    for (let i = 0; i <= 14; i++) {
-      let tempDate = new Date();
-      tempDate.setDate(date.getDate() + i);
-      let str =
-        days[tempDate.getDay()] +
-        '/' +
-        pad(tempDate.getDate()) +
-        '/' +
-        months[tempDate.getMonth()] +
-        '/' +
-        (1 + tempDate.getDay());
-      // str.split("/");
-      dates.push(str.split('/'));
-    }
-    // console.log("DATES", dates);
-    // console.log("SPLIT ", dates[0].split("/"));
-
-    function pad(n) {
-      return n < 10 ? '0' + n : n;
-    }
-
     return (
       <View style={{flex: 4}}>
         <Text style={styles.heading1}>Daily Deals</Text>
@@ -317,7 +282,7 @@ export default class App extends React.Component {
               <View style={styles.mainContainer}>
                 <FlatList
                   horizontal={true}
-                  data={dates}
+                  data={listDates}
                   style={{height: 65, flexGrow: 0}}
                   renderItem={({item, index}) => {
                     const dayOfTheWeek = item[3];
@@ -363,8 +328,8 @@ export default class App extends React.Component {
                               style={
                                 this.state.selected &&
                                 this.state.index === index
-                                  ? {fontSize: 7, color: '#FB4D64'}
-                                  : {fontSize: 7, color: 'black'}
+                                  ? {fontSize: 7, color: Colors.semiPink}
+                                  : {fontSize: 7, color: Colors.black}
                               }>
                               {item[0]}
                             </Text>
@@ -373,12 +338,12 @@ export default class App extends React.Component {
                                 this.state.selected &&
                                 this.state.index === index
                                   ? {
-                                      color: '#FB4D64',
+                                      color: Colors.semiPink,
                                       fontSize: 17,
                                       fontWeight: 'bold',
                                     }
                                   : {
-                                      color: 'black',
+                                      color: Colors.black,
                                       fontSize: 17,
                                       fontWeight: 'bold',
                                     }
@@ -389,8 +354,8 @@ export default class App extends React.Component {
                               style={
                                 this.state.selected &&
                                 this.state.index === index
-                                  ? {fontSize: 9, color: '#FB4D64'}
-                                  : {fontSize: 9, color: 'black'}
+                                  ? {fontSize: 9, color: Colors.semiPink}
+                                  : {fontSize: 9, color: Colors.black}
                               }>
                               {item[2]}
                             </Text>
