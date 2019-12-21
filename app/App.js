@@ -31,6 +31,16 @@ export default class App extends React.Component {
       index: null,
       discount: null,
       selectedDeal: false,
+      activeDate: false,
+      emptyDate: null,
+      emptySun: null,
+      emptyMon: null,
+      emptyTue: null,
+      emptyWed: null,
+      emptyThu: null,
+      emptyFri: null,
+      emptySat: null,
+      idDeal: null,
     };
   }
 
@@ -50,7 +60,7 @@ export default class App extends React.Component {
       });
   };
 
-  pushDeal = (item, day) => {
+  pushDeal = (item, day, all) => {
     if (item.active === 1) {
       day.push(item);
     }
@@ -64,6 +74,7 @@ export default class App extends React.Component {
     let thu = [];
     let fri = [];
     let sat = [];
+    let all = [];
     this.state.data.data.map(item => {
       switch (item.day_of_week.toString()) {
         case '1':
@@ -89,6 +100,15 @@ export default class App extends React.Component {
           break;
       }
     });
+    all.push(
+      {day: {sun: sun}},
+      {day: {mon: mon}},
+      {day: {tue: tue}},
+      {day: {wed: wed}},
+      {day: {thu: thu}},
+      {day: {fri: fri}},
+      {day: {sat: sat}},
+    );
     this.setState({
       sun: sun,
       mon: mon,
@@ -97,6 +117,41 @@ export default class App extends React.Component {
       thu: thu,
       fri: fri,
       sat: sat,
+      all: all,
+    });
+  };
+
+  checkEmpty = () => {
+    this.state.all.map(item => {
+      if (item.day.sun && item.day.sun.length < 1) {
+        this.setState({
+          emptySun: 'SUN',
+        });
+      } else if (item.day.mon && item.day.mon.length < 1) {
+        this.setState({
+          emptyMon: 'MON',
+        });
+      } else if (item.day.tue && item.day.tue.length < 1) {
+        this.setState({
+          emptyTue: 'TUE',
+        });
+      } else if (item.day.wed && item.day.wed.length < 1) {
+        this.setState({
+          emptyWed: 'WED',
+        });
+      } else if (item.day.thu && item.day.thu.length < 1) {
+        this.setState({
+          emptyThu: 'THU',
+        });
+      } else if (item.day.fri && item.day.fri.length < 1) {
+        this.setState({
+          emptyFri: 'FRI',
+        });
+      } else if (item.day.sat && item.day.sat.length < 1) {
+        this.setState({
+          emptySat: 'SAT',
+        });
+      }
     });
   };
 
@@ -113,15 +168,28 @@ export default class App extends React.Component {
     return result;
   };
 
+  findIndexOfMaxDisount = val => {
+    let discounts = [];
+    val.map(item => {
+      discounts.push(item.discount);
+    });
+    let indexOfMaxValue = discounts.reduce(
+      (iMax, x, i, arr) => (x > arr[iMax] ? i : iMax),
+      0,
+    );
+    return indexOfMaxValue;
+  };
+
   async componentDidMount() {
     await this.onGetData();
     await this.showData();
+    await this.checkEmpty();
     this.selectDeals(new Date().getDay() + 1, 0);
   }
 
   getEachDeal = async (day, index) => {
     let discount = await this.findMaxDiscount(day);
-
+    let idDeal = await this.findIndexOfMaxDisount(day);
     this.setState({
       all: day,
       selected: true,
@@ -129,6 +197,8 @@ export default class App extends React.Component {
       discount: discount,
       active: true,
       selectedDeal: false,
+      activeDate: true,
+      idDeal: idDeal,
     });
   };
 
@@ -141,7 +211,7 @@ export default class App extends React.Component {
         if (this.state.sun.length > 0) {
           this.getEachDeal(this.state.sun, index);
         } else {
-          this.selectDeals(value + 1, index);
+          this.selectDeals(value + 1, index + 1);
         }
 
         break;
@@ -149,7 +219,7 @@ export default class App extends React.Component {
         if (this.state.mon.length > 0) {
           this.getEachDeal(this.state.mon, index);
         } else {
-          this.selectDeals(value + 1, index);
+          this.selectDeals(value + 1, index + 1);
         }
 
         break;
@@ -157,7 +227,7 @@ export default class App extends React.Component {
         if (this.state.tue.length > 0) {
           this.getEachDeal(this.state.tue, index);
         } else {
-          this.selectDeals(value + 1, index);
+          this.selectDeals(value + 1, index + 1);
         }
 
         break;
@@ -165,7 +235,7 @@ export default class App extends React.Component {
         if (this.state.wed.length > 0) {
           this.getEachDeal(this.state.wed, index);
         } else {
-          this.selectDeals(value + 1, index);
+          this.selectDeals(value + 1, index + 1);
         }
 
         break;
@@ -173,7 +243,7 @@ export default class App extends React.Component {
         if (this.state.thu.length > 0) {
           this.getEachDeal(this.state.thu, index);
         } else {
-          this.selectDeals(value + 1, index);
+          this.selectDeals(value + 1, index + 1);
         }
 
         break;
@@ -181,7 +251,7 @@ export default class App extends React.Component {
         if (this.state.fri.length > 0) {
           this.getEachDeal(this.state.fri, index);
         } else {
-          this.selectDeals(value + 1, index);
+          this.selectDeals(value + 1, index + 1);
         }
 
         break;
@@ -189,7 +259,7 @@ export default class App extends React.Component {
         if (this.state.sat.length > 0) {
           this.getEachDeal(this.state.sat, index);
         } else {
-          this.selectDeals(1, index);
+          this.selectDeals(value + 1, index + 1);
         }
 
         break;
@@ -228,7 +298,7 @@ export default class App extends React.Component {
                           this.state.active &&
                           (this.state.selectedDeal
                             ? this.state.id === index
-                            : this.state.discount === item.discount)
+                            : this.state.idDeal === index)
                             ? styles.activeDeal
                             : styles.inActiveDeal
                         }>
@@ -238,7 +308,7 @@ export default class App extends React.Component {
                               this.state.active &&
                               (this.state.selectedDeal
                                 ? this.state.id === index
-                                : this.state.discount === item.discount)
+                                : this.state.idDeal === index)
                                 ? {marginTop: 15, fontSize: 10, color: 'white'}
                                 : {
                                     marginTop: 15,
@@ -253,7 +323,7 @@ export default class App extends React.Component {
                               this.state.active &&
                               (this.state.selectedDeal
                                 ? this.state.id === index
-                                : this.state.discount === item.discount)
+                                : this.state.idDeal === index)
                                 ? {fontSize: 17, color: 'white'}
                                 : {fontSize: 17, color: Colors.semiPink}
                             }>
@@ -286,82 +356,91 @@ export default class App extends React.Component {
                   style={{height: 65, flexGrow: 0}}
                   renderItem={({item, index}) => {
                     const dayOfTheWeek = item[3];
+
                     return (
-                      <TouchableOpacity
-                        onPress={() => {
-                          // let lists = [];
-                          switch (dayOfTheWeek) {
-                            //if it is sunday
-                            case '1':
-                              this.selectDeals(1, index);
-                              break;
-                            case '2':
-                              this.selectDeals(2, index);
-                              break;
-                            case '3':
-                              this.selectDeals(3, index);
-                              break;
-                            case '4':
-                              this.selectDeals(4, index);
-                              break;
-                            case '5':
-                              this.selectDeals(5, index);
-                              break;
-                            case '6':
-                              this.selectDeals(6, index);
-                              break;
-                            case '7':
-                              this.selectDeals(7, index);
-                              break;
-                            default:
-                              break;
-                          }
-                        }}
-                        style={{height: 70, marginLeft: 0}}>
-                        <CardView
-                          cardElevation={4}
-                          maxCardElevation={4}
-                          radius={7}
-                          backgroundColor={'#F4F4F4'}>
-                          <View style={styles.dayCard}>
-                            <Text
-                              style={
-                                this.state.selected &&
-                                this.state.index === index
-                                  ? {fontSize: 7, color: Colors.semiPink}
-                                  : {fontSize: 7, color: Colors.black}
-                              }>
-                              {item[0]}
-                            </Text>
-                            <Text
-                              style={
-                                this.state.selected &&
-                                this.state.index === index
-                                  ? {
-                                      color: Colors.semiPink,
-                                      fontSize: 17,
-                                      fontWeight: 'bold',
-                                    }
-                                  : {
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                      fontWeight: 'bold',
-                                    }
-                              }>
-                              {item[1]}
-                            </Text>
-                            <Text
-                              style={
-                                this.state.selected &&
-                                this.state.index === index
-                                  ? {fontSize: 9, color: Colors.semiPink}
-                                  : {fontSize: 9, color: Colors.black}
-                              }>
-                              {item[2]}
-                            </Text>
-                          </View>
-                        </CardView>
-                      </TouchableOpacity>
+                      item[0] !== this.state.emptySat &&
+                      item[0] !== this.state.emptyFri &&
+                      item[0] !== this.state.emptySun &&
+                      item[0] !== this.state.emptyMon &&
+                      item[0] !== this.state.emptyTue &&
+                      item[0] !== this.state.emptyWed &&
+                      item[0] !== this.state.emptyThu && (
+                        <TouchableOpacity
+                          onPress={() => {
+                            // let lists = [];
+                            switch (dayOfTheWeek) {
+                              //if it is sunday
+                              case '1':
+                                this.selectDeals(1, index);
+                                break;
+                              case '2':
+                                this.selectDeals(2, index);
+                                break;
+                              case '3':
+                                this.selectDeals(3, index);
+                                break;
+                              case '4':
+                                this.selectDeals(4, index);
+                                break;
+                              case '5':
+                                this.selectDeals(5, index);
+                                break;
+                              case '6':
+                                this.selectDeals(6, index);
+                                break;
+                              case '7':
+                                this.selectDeals(7, index);
+                                break;
+                              default:
+                                break;
+                            }
+                          }}
+                          style={{height: 70, marginLeft: 0}}>
+                          <CardView
+                            cardElevation={4}
+                            maxCardElevation={4}
+                            radius={7}
+                            backgroundColor={'#F4F4F4'}>
+                            <View style={styles.dayCard}>
+                              <Text
+                                style={
+                                  this.state.selected &&
+                                  this.state.index === index
+                                    ? {fontSize: 7, color: Colors.semiPink}
+                                    : {fontSize: 7, color: Colors.black}
+                                }>
+                                {item[0]}
+                              </Text>
+                              <Text
+                                style={
+                                  this.state.selected &&
+                                  this.state.index === index
+                                    ? {
+                                        color: Colors.semiPink,
+                                        fontSize: 17,
+                                        fontWeight: 'bold',
+                                      }
+                                    : {
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                        fontWeight: 'bold',
+                                      }
+                                }>
+                                {item[1]}
+                              </Text>
+                              <Text
+                                style={
+                                  this.state.selected &&
+                                  this.state.index === index
+                                    ? {fontSize: 9, color: Colors.semiPink}
+                                    : {fontSize: 9, color: Colors.black}
+                                }>
+                                {item[2]}
+                              </Text>
+                            </View>
+                          </CardView>
+                        </TouchableOpacity>
+                      )
                     );
                   }}
                 />
