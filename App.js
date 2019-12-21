@@ -196,24 +196,8 @@ export default class App extends React.Component {
 
   render() {
     const deals = (
-      <View
-        style={{
-          flex: 1,
-          height: 200,
-          marginTop: 0,
-          paddingRight: 0,
-          paddingLeft: 0,
-          paddingTop: 0,
-          paddingBottom: 0,
-          backgroundColor: '#F9F9F9',
-        }}>
-        <View
-          style={{
-            paddingRight: 0,
-            paddingLeft: 25,
-            paddingTop: 0,
-            paddingBottom: 0,
-          }}>
+      <View style={styles.containerDeals}>
+        <View style={styles.subContainerDeals}>
           <FlatList
             horizontal={true}
             style={{flexGrow: 0}}
@@ -229,14 +213,7 @@ export default class App extends React.Component {
                     });
                   }}
                   style={{height: 100}}>
-                  <View
-                    style={{
-                      flex: 1,
-                      marginTop: 0,
-                      height: 80,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
+                  <View style={styles.dealCardStyle}>
                     <CardView
                       cardElevation={5}
                       maxCardElevation={5}
@@ -248,27 +225,10 @@ export default class App extends React.Component {
                           (this.state.selectedDeal
                             ? this.state.id === index
                             : this.state.discount === item.discount)
-                            ? {
-                                width: 103,
-                                height: 60,
-                                backgroundColor: '#FB4D63',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }
-                            : {
-                                width: 103,
-                                height: 60,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                              }
+                            ? styles.activeDeal
+                            : styles.inActiveDeal
                         }>
-                        <View
-                          style={{
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginRight: 20,
-                            marginBottom: 15,
-                          }}>
+                        <View style={styles.textDeal}>
                           <Text
                             style={
                               this.state.active &&
@@ -348,30 +308,13 @@ export default class App extends React.Component {
 
     return (
       <View style={{flex: 4}}>
-        <Text
-          style={{
-            fontSize: 22,
-            fontWeight: 'bold',
-            marginBottom: 0,
-            paddingRight: 0,
-            paddingLeft: 28,
-            paddingTop: 20,
-            paddingBottom: 3,
-          }}>
-          Daily Deals
-        </Text>
+        <Text style={styles.heading1}>Daily Deals</Text>
 
         {this.state.success === true &&
           this.state.data != null &&
           this.state.data.data.length > 0 && (
             <View style={{flex: 1}}>
-              <View
-                style={{
-                  paddingRight: 0,
-                  paddingLeft: 25,
-                  paddingTop: 0,
-                  paddingBottom: 0,
-                }}>
+              <View style={styles.mainContainer}>
                 <FlatList
                   horizontal={true}
                   data={dates}
@@ -415,18 +358,7 @@ export default class App extends React.Component {
                           maxCardElevation={4}
                           radius={7}
                           backgroundColor={'#F4F4F4'}>
-                          <View
-                            style={{
-                              backgroundColor: '#F2F2F2',
-                              paddingLeft: 10,
-                              paddingTop: 5,
-                              width: 52,
-                              height: 55,
-                              borderRightWidth: 1,
-                              borderStyle: 'solid',
-                              borderRightColor: 'red',
-                              borderRadius: 2,
-                            }}>
+                          <View style={styles.dayCard}>
                             <Text
                               style={
                                 this.state.selected &&
@@ -481,5 +413,73 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  mainContainer: {
+    paddingRight: 0,
+    paddingLeft: 25,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  containerDeals: {
+    flex: 1,
+    height: 200,
+    marginTop: 0,
+    paddingRight: 0,
+    paddingLeft: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+    backgroundColor: '#F9F9F9',
+  },
+  subContainerDeals: {
+    paddingRight: 0,
+    paddingLeft: 25,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  dealCardStyle: {
+    flex: 1,
+    marginTop: 0,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeDeal: {
+    width: 103,
+    height: 60,
+    backgroundColor: '#FB4D63',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inActiveDeal: {
+    width: 103,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textDeal: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 20,
+    marginBottom: 15,
+  },
+  heading1: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 0,
+    paddingRight: 0,
+    paddingLeft: 28,
+    paddingTop: 20,
+    paddingBottom: 3,
+  },
+  dayCard: {
+    backgroundColor: '#F2F2F2',
+    paddingLeft: 10,
+    paddingTop: 5,
+    width: 52,
+    height: 55,
+    borderRightWidth: 1,
+    borderStyle: 'solid',
+    borderRightColor: 'red',
+    borderRadius: 2,
   },
 });
