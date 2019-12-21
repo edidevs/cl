@@ -268,8 +268,6 @@ export default class App extends React.Component {
   };
 
   render() {
-    console.log("SUN", this.state.sun);
-    console.log("TUE", this.state.tue);
     //generate dates
     let listDates = dates();
     const deals = (
