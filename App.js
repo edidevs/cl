@@ -4,7 +4,7 @@ import React from 'react';
 import CardView from 'react-native-rn-cardview';
 const moment = require('moment');
 
-import {View, Text, FlatList, TouchableOpacity} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -48,6 +48,12 @@ export default class App extends React.Component {
       });
   };
 
+  pushDeal = (item, day) => {
+    if (item.active === 1) {
+      day.push(item);
+    }
+  };
+
   showData = async () => {
     let sun = [];
     let mon = [];
@@ -59,39 +65,25 @@ export default class App extends React.Component {
     await this.state.data.data.map(item => {
       switch (item.day_of_week.toString()) {
         case '1':
-          if (item.active === 1) {
-            sun.push(item);
-          }
+          this.pushDeal(item, sun);
           break;
         case '2':
-          if (item.active === 1) {
-            mon.push(item);
-          }
+          this.pushDeal(item, mon);
           break;
         case '3':
-          if (item.active === 1) {
-            tue.push(item);
-          }
+          this.pushDeal(item, tue);
           break;
         case '4':
-          if (item.active === 1) {
-            wed.push(item);
-          }
+          this.pushDeal(item, wed);
           break;
         case '5':
-          if (item.active === 1) {
-            thu.push(item);
-          }
+          this.pushDeal(item, thu);
           break;
         case '6':
-          if (item.active === 1) {
-            fri.push(item);
-          }
+          this.pushDeal(item, fri);
           break;
         case '7':
-          if (item.active === 1) {
-            sat.push(item);
-          }
+          this.pushDeal(item, sat);
           break;
       }
     });
@@ -125,6 +117,19 @@ export default class App extends React.Component {
     this.selectDeals(new Date().getDay() + 1, 0);
   }
 
+  getEachDeal = async (day, index) => {
+    let discount = await this.findMaxDiscount(day);
+
+    this.setState({
+      all: day,
+      selected: true,
+      index: index,
+      discount: discount,
+      active: true,
+      selectedDeal: false,
+    });
+  };
+
   selectDeals = async (value, index) => {
     switch (value) {
       case 1:
@@ -132,16 +137,7 @@ export default class App extends React.Component {
           if empty then move to next deal until there is data found, 
           not really recursive */
         if (this.state.sun.length > 0) {
-          let discount = await this.findMaxDiscount(this.state.sun);
-
-          this.setState({
-            all: this.state.sun,
-            selected: true,
-            index: index,
-            discount: discount,
-            active: true,
-            selectedDeal: false,
-          });
+          this.getEachDeal(this.state.sun, index);
         } else {
           this.selectDeals(value + 1, index);
         }
@@ -149,16 +145,7 @@ export default class App extends React.Component {
         break;
       case 2:
         if (this.state.mon.length > 0) {
-          let discount = await this.findMaxDiscount(this.state.mon);
-
-          this.setState({
-            all: this.state.mon,
-            selected: true,
-            index: index,
-            discount: discount,
-            active: true,
-            selectedDeal: false,
-          });
+          this.getEachDeal(this.state.mon, index);
         } else {
           this.selectDeals(value + 1, index);
         }
@@ -166,16 +153,7 @@ export default class App extends React.Component {
         break;
       case 3:
         if (this.state.tue.length > 0) {
-          let discount = await this.findMaxDiscount(this.state.tue);
-
-          this.setState({
-            all: this.state.tue,
-            selected: true,
-            index: index,
-            discount: discount,
-            active: true,
-            selectedDeal: false,
-          });
+          this.getEachDeal(this.state.tue, index);
         } else {
           this.selectDeals(value + 1, index);
         }
@@ -183,16 +161,7 @@ export default class App extends React.Component {
         break;
       case 4:
         if (this.state.wed.length > 0) {
-          let discount = await this.findMaxDiscount(this.state.sun);
-
-          this.setState({
-            all: this.state.wed,
-            selected: true,
-            index: index,
-            discount: discount,
-            active: true,
-            selectedDeal: false,
-          });
+          this.getEachDeal(this.state.wed, index);
         } else {
           this.selectDeals(value + 1, index);
         }
@@ -200,16 +169,7 @@ export default class App extends React.Component {
         break;
       case 5:
         if (this.state.thu.length > 0) {
-          let discount = await this.findMaxDiscount(this.state.sun);
-
-          this.setState({
-            all: this.state.thu,
-            selected: true,
-            index: index,
-            discount: discount,
-            active: true,
-            selectedDeal: false,
-          });
+          this.getEachDeal(this.state.thu, index);
         } else {
           this.selectDeals(value + 1, index);
         }
@@ -217,16 +177,7 @@ export default class App extends React.Component {
         break;
       case 6:
         if (this.state.fri.length > 0) {
-          let discount = await this.findMaxDiscount(this.state.sun);
-
-          this.setState({
-            all: this.state.fri,
-            selected: true,
-            index: index,
-            discount: discount,
-            active: true,
-            selectedDeal: false,
-          });
+          this.getEachDeal(this.state.fri, index);
         } else {
           this.selectDeals(value + 1, index);
         }
@@ -234,16 +185,7 @@ export default class App extends React.Component {
         break;
       case 7:
         if (this.state.sat.length > 0) {
-          let discount = await this.findMaxDiscount(this.state.sun);
-
-          this.setState({
-            all: this.state.sat,
-            selected: true,
-            index: index,
-            discount: discount,
-            active: true,
-            selectedDeal: false,
-          });
+          this.getEachDeal(this.state.sat, index);
         } else {
           this.selectDeals(1, index);
         }
@@ -535,3 +477,9 @@ export default class App extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
