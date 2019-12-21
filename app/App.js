@@ -78,25 +78,25 @@ export default class App extends React.Component {
     let all = [];
     this.state.data.data.map(item => {
       switch (item.day_of_week.toString()) {
-        case '1':
+        case '0':
           this.pushDeal(item, sun);
           break;
-        case '2':
+        case '1':
           this.pushDeal(item, mon);
           break;
-        case '3':
+        case '2':
           this.pushDeal(item, tue);
           break;
-        case '4':
+        case '3':
           this.pushDeal(item, wed);
           break;
-        case '5':
+        case '4':
           this.pushDeal(item, thu);
           break;
-        case '6':
+        case '5':
           this.pushDeal(item, fri);
           break;
-        case '7':
+        case '6':
           this.pushDeal(item, sat);
           break;
       }
@@ -268,6 +268,8 @@ export default class App extends React.Component {
   };
 
   render() {
+    console.log("SUN", this.state.sun);
+    console.log("TUE", this.state.tue);
     //generate dates
     let listDates = dates();
     const deals = (
