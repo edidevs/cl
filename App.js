@@ -435,13 +435,12 @@ export default class App extends React.Component {
                   data={dates}
                   style={{height: 65, flexGrow: 0}}
                   renderItem={({item, index}) => {
+                    const dayOfTheWeek = item[3];
                     return (
-                      // <Text>{item.id}</Text>
-
                       <TouchableOpacity
                         onPress={() => {
                           // let lists = [];
-                          switch (item[3]) {
+                          switch (dayOfTheWeek) {
                             //if it is sunday
                             case '1':
                               this.selectDeals(1, index);
