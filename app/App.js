@@ -10,6 +10,8 @@ import {Deals} from './Components/Deals/';
 import {Days} from './Components/Days/';
 import {show} from './utils/showData';
 import {onGetData} from './utils/onGetData';
+import {checkEmpty} from './utils/checkEmpty';
+import {selectDeals} from './utils/selectDeals';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -54,95 +56,12 @@ export default class App extends React.Component {
     this.setState(nextState);
   };
 
-  pushDeal = (item, day) => {
-    if (item.active === 1) {
-      day.push(item);
-    }
-  };
-
-  checkEmpty = () => {
-    let emptyArr = [
-      {emptySun: 'SUN'},
-      {emptyMon: 'MON'},
-      {emptyTue: 'TUE'},
-      {emptyWed: 'WED'},
-      {emptyThu: 'THU'},
-      {emptyFri: 'FRI'},
-      {emptySat: 'SAT'},
-    ];
-
-    this.state.all.map(item => {
-      for (let i = 1; i <= 7; i++) {
-        if (item.day[i.toString()] && item.day[i.toString()].length < 1) {
-          this.setState(emptyArr[i - 1]);
-        }
-      }
-    });
-  };
-
-  findMaxDiscount = arr => {
-    let discounts = [];
-    arr.map(item => {
-      discounts.push(item.discount);
-    });
-
-    let result = discounts.reduce(function(p, v) {
-      return p > v ? p : v;
-    });
-
-    return result;
-  };
-
-  findIndexOfMaxDisount = val => {
-    let discounts = [];
-    val.map(item => {
-      discounts.push(item.discount);
-    });
-    let indexOfMaxValue = discounts.reduce(
-      (iMax, x, i, arr) => (x > arr[iMax] ? i : iMax),
-      0,
-    );
-    return indexOfMaxValue;
-  };
-
   async componentDidMount() {
     await onGetData(this.state.setState);
     await show(this.state.data, this.state.setState);
-    await this.checkEmpty();
-    await this.selectDeals(new Date().getDay() + 1, 0);
+    await checkEmpty(this.state.all, this.state.setState);
+    await selectDeals(new Date().getDay() + 1, 0, this.state);
   }
-
-  getEachDeal = async (day, index) => {
-    let discount = await this.findMaxDiscount(day);
-    let idDeal = await this.findIndexOfMaxDisount(day);
-    this.setState({
-      allDeal: day,
-      selected: true,
-      index: index,
-      discount: discount,
-      active: true,
-      selectedDeal: false,
-      activeDate: true,
-      idDeal: idDeal,
-    });
-  };
-
-  selectDeals = (value, index) => {
-    let daysInWeek = [
-      this.state.sun,
-      this.state.mon,
-      this.state.tue,
-      this.state.wed,
-      this.state.thu,
-      this.state.fri,
-      this.state.sat,
-    ];
-    if (daysInWeek[value - 1].length > 0) {
-      this.getEachDeal(daysInWeek[value - 1], index);
-    } else {
-      this.selectDeals(value + 1, index + 1);
-    }
-  };
 
   render() {
     //generate dates
@@ -166,7 +85,8 @@ export default class App extends React.Component {
                 emptyFri={this.state.emptyFri}
                 selected={this.state.selected}
                 idx={this.state.index}
-                selectDeals={this.selectDeals}
+                selectDeals={selectDeals}
+                stateObj={this.state}
               />
 
               <Deals
