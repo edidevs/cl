@@ -1,18 +1,19 @@
+/* eslint-disable eslint-comments/no-unused-disable */
 /* eslint-disable radix */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-
-import CardView from 'react-native-rn-cardview';
 const moment = require('moment');
 
-import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
-import {dates} from './utils/date';
-import Colors from './styles/Colors';
+import {View, Text, StyleSheet} from 'react-native';
 
+import {Deals} from './Components/Deals/';
+import {Days} from './Components/Days/';
+import {show} from './utils/showData';
+import {onGetData} from './utils/onGetData';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-
+    const that = this;
     this.state = {
       currentDate: new Date(),
       markedDate: moment(new Date()).format('YYYY-MM-DD'),
@@ -43,68 +44,20 @@ export default class App extends React.Component {
       emptySat: null,
       idDeal: null,
       allDeal: null,
+      setState: function(obj) {
+        that.setState(obj);
+      },
     };
   }
 
-  onGetData = async () => {
-    await fetch(
-      'https://ulo.life/api/timeslots?provider_id=7c8ea264-2cd3-4e5b-8f40-46a1a6fda174&sort_by=created_at&order=asc&app_version=1.10.0',
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({
-          data: responseJson,
-          success: true,
-        });
-      })
-      .catch(error => {
-        console.error(error);
-      });
+  onPressDeal = nextState => {
+    this.setState(nextState);
   };
 
   pushDeal = (item, day) => {
     if (item.active === 1) {
       day.push(item);
     }
-  };
-
-  showData = () => {
-    let sun = [];
-    let mon = [];
-    let tue = [];
-    let wed = [];
-    let thu = [];
-    let fri = [];
-    let sat = [];
-    let days = [sun, mon, tue, wed, thu, fri, sat];
-
-    let all = [];
-    this.state.data.data.map(item => {
-      for (let i = 0; i < days.length; i++) {
-        if (item.day_of_week === i) {
-          this.pushDeal(item, days[i]);
-        }
-      }
-    });
-    all.push(
-      {day: {'1': sun}},
-      {day: {'2': mon}},
-      {day: {'3': tue}},
-      {day: {'4': wed}},
-      {day: {'5': thu}},
-      {day: {'6': fri}},
-      {day: {'7': sat}},
-    );
-    this.setState({
-      sun: sun,
-      mon: mon,
-      tue: tue,
-      wed: wed,
-      thu: thu,
-      fri: fri,
-      sat: sat,
-      all: all,
-    });
   };
 
   checkEmpty = () => {
@@ -153,10 +106,10 @@ export default class App extends React.Component {
   };
 
   async componentDidMount() {
-    await this.onGetData();
-    await this.showData();
+    await onGetData(this.state.setState);
+    await show(this.state.data, this.state.setState);
     await this.checkEmpty();
-    this.selectDeals(new Date().getDay() + 1, 0);
+    await this.selectDeals(new Date().getDay() + 1, 0);
   }
 
   getEachDeal = async (day, index) => {
@@ -193,78 +146,7 @@ export default class App extends React.Component {
 
   render() {
     //generate dates
-    let listDates = dates();
-    const deals = (
-      <View style={styles.containerDeals}>
-        <View style={styles.subContainerDeals}>
-          <FlatList
-            horizontal={true}
-            style={{flexGrow: 0}}
-            data={this.state.allDeal}
-            renderItem={({item, index}) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => {
-                    this.setState({
-                      active: true,
-                      id: index,
-                      selectedDeal: true,
-                    });
-                  }}
-                  style={{height: 100}}>
-                  <View style={styles.dealCardStyle}>
-                    <CardView
-                      cardElevation={5}
-                      maxCardElevation={5}
-                      radius={10}
-                      backgroundColor={Colors.white}>
-                      <View
-                        style={
-                          this.state.active &&
-                          (this.state.selectedDeal
-                            ? this.state.id === index
-                            : this.state.idDeal === index)
-                            ? styles.activeDeal
-                            : styles.inActiveDeal
-                        }>
-                        <View style={styles.textDeal}>
-                          <Text
-                            style={
-                              this.state.active &&
-                              (this.state.selectedDeal
-                                ? this.state.id === index
-                                : this.state.idDeal === index)
-                                ? {marginTop: 15, fontSize: 10, color: 'white'}
-                                : {
-                                    marginTop: 15,
-                                    fontSize: 10,
-                                    color: Colors.semiPink,
-                                  }
-                            }>
-                            {item.start_time}pm
-                          </Text>
-                          <Text
-                            style={
-                              this.state.active &&
-                              (this.state.selectedDeal
-                                ? this.state.id === index
-                                : this.state.idDeal === index)
-                                ? {fontSize: 17, color: 'white'}
-                                : {fontSize: 17, color: Colors.semiPink}
-                            }>
-                            {item.discount}%
-                          </Text>
-                        </View>
-                      </View>
-                    </CardView>
-                  </View>
-                </TouchableOpacity>
-              );
-            }}
-          />
-        </View>
-      </View>
-    );
+    // let listDates = dates();
 
     return (
       <View style={{flex: 4}}>
@@ -274,82 +156,27 @@ export default class App extends React.Component {
           this.state.data != null &&
           this.state.data.data.length > 0 && (
             <View style={{flex: 1}}>
-              <View style={styles.mainContainer}>
-                <FlatList
-                  horizontal={true}
-                  data={listDates}
-                  style={{height: 65, flexGrow: 0}}
-                  renderItem={({item, index}) => {
-                    const dayOfTheWeek = item[3];
-                    const nameOfDay = item[0];
-                    const dateOfDay = item[1];
-                    const month = item[2];
+              <Days
+                emptySat={this.state.emptySat}
+                emptySun={this.state.emptySun}
+                emptyMon={this.state.emptyMon}
+                emptyTue={this.state.emptyTue}
+                emptyWed={this.state.emptyWed}
+                emptyThu={this.state.emptyThu}
+                emptyFri={this.state.emptyFri}
+                selected={this.state.selected}
+                idx={this.state.index}
+                selectDeals={this.selectDeals}
+              />
 
-                    return (
-                      nameOfDay !== this.state.emptySat &&
-                      nameOfDay !== this.state.emptyFri &&
-                      nameOfDay !== this.state.emptySun &&
-                      nameOfDay !== this.state.emptyMon &&
-                      nameOfDay !== this.state.emptyTue &&
-                      nameOfDay !== this.state.emptyWed &&
-                      nameOfDay !== this.state.emptyThu && (
-                        <TouchableOpacity
-                          onPress={() => {
-                            // let lists = [];
-                            this.selectDeals(parseInt(dayOfTheWeek), index);
-                          }}
-                          style={{height: 70, marginLeft: 0}}>
-                          <CardView
-                            cardElevation={4}
-                            maxCardElevation={4}
-                            radius={7}
-                            backgroundColor={'#F4F4F4'}>
-                            <View style={styles.dayCard}>
-                              <Text
-                                style={
-                                  this.state.selected &&
-                                  this.state.index === index
-                                    ? {fontSize: 7, color: Colors.semiPink}
-                                    : {fontSize: 7, color: Colors.black}
-                                }>
-                                {nameOfDay}
-                              </Text>
-                              <Text
-                                style={
-                                  this.state.selected &&
-                                  this.state.index === index
-                                    ? {
-                                        color: Colors.semiPink,
-                                        fontSize: 17,
-                                        fontWeight: 'bold',
-                                      }
-                                    : {
-                                        color: Colors.black,
-                                        fontSize: 17,
-                                        fontWeight: 'bold',
-                                      }
-                                }>
-                                {dateOfDay}
-                              </Text>
-                              <Text
-                                style={
-                                  this.state.selected &&
-                                  this.state.index === index
-                                    ? {fontSize: 9, color: Colors.semiPink}
-                                    : {fontSize: 9, color: Colors.black}
-                                }>
-                                {month}
-                              </Text>
-                            </View>
-                          </CardView>
-                        </TouchableOpacity>
-                      )
-                    );
-                  }}
-                />
-              </View>
-
-              {deals}
+              <Deals
+                onPressDeal={this.onPressDeal}
+                active={this.state.active}
+                selectedDeal={this.state.selectedDeal}
+                id={this.state.id}
+                idDeal={this.state.idDeal}
+                allDeal={this.state.allDeal}
+              />
             </View>
           )}
       </View>

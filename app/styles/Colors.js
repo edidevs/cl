@@ -9,4 +9,5 @@ export default {
   blue: '#3E83FF',
   maroon: '#71132D',
   semiPink: '#FB4D64',
+  semiRed: '#F4F4F4',
 };
