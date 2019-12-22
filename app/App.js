@@ -87,13 +87,13 @@ export default class App extends React.Component {
       }
     });
     all.push(
-      {day: {sun: sun}},
-      {day: {mon: mon}},
-      {day: {tue: tue}},
-      {day: {wed: wed}},
-      {day: {thu: thu}},
-      {day: {fri: fri}},
-      {day: {sat: sat}},
+      {day: {'1': sun}},
+      {day: {'2': mon}},
+      {day: {'3': tue}},
+      {day: {'4': wed}},
+      {day: {'5': thu}},
+      {day: {'6': fri}},
+      {day: {'7': sat}},
     );
     this.setState({
       sun: sun,
@@ -108,35 +108,21 @@ export default class App extends React.Component {
   };
 
   checkEmpty = () => {
+    let emptyArr = [
+      {emptySun: 'SUN'},
+      {emptyMon: 'MON'},
+      {emptyTue: 'TUE'},
+      {emptyWed: 'WED'},
+      {emptyThu: 'THU'},
+      {emptyFri: 'FRI'},
+      {emptySat: 'SAT'},
+    ];
+
     this.state.all.map(item => {
-      if (item.day.sun && item.day.sun.length < 1) {
-        this.setState({
-          emptySun: 'SUN',
-        });
-      } else if (item.day.mon && item.day.mon.length < 1) {
-        this.setState({
-          emptyMon: 'MON',
-        });
-      } else if (item.day.tue && item.day.tue.length < 1) {
-        this.setState({
-          emptyTue: 'TUE',
-        });
-      } else if (item.day.wed && item.day.wed.length < 1) {
-        this.setState({
-          emptyWed: 'WED',
-        });
-      } else if (item.day.thu && item.day.thu.length < 1) {
-        this.setState({
-          emptyThu: 'THU',
-        });
-      } else if (item.day.fri && item.day.fri.length < 1) {
-        this.setState({
-          emptyFri: 'FRI',
-        });
-      } else if (item.day.sat && item.day.sat.length < 1) {
-        this.setState({
-          emptySat: 'SAT',
-        });
+      for (let i = 1; i <= 7; i++) {
+        if (item.day[i.toString()] && item.day[i.toString()].length < 1) {
+          this.setState(emptyArr[i - 1]);
+        }
       }
     });
   };
@@ -295,15 +281,18 @@ export default class App extends React.Component {
                   style={{height: 65, flexGrow: 0}}
                   renderItem={({item, index}) => {
                     const dayOfTheWeek = item[3];
+                    const nameOfDay = item[0];
+                    const dateOfDay = item[1];
+                    const month = item[2];
 
                     return (
-                      item[0] !== this.state.emptySat &&
-                      item[0] !== this.state.emptyFri &&
-                      item[0] !== this.state.emptySun &&
-                      item[0] !== this.state.emptyMon &&
-                      item[0] !== this.state.emptyTue &&
-                      item[0] !== this.state.emptyWed &&
-                      item[0] !== this.state.emptyThu && (
+                      nameOfDay !== this.state.emptySat &&
+                      nameOfDay !== this.state.emptyFri &&
+                      nameOfDay !== this.state.emptySun &&
+                      nameOfDay !== this.state.emptyMon &&
+                      nameOfDay !== this.state.emptyTue &&
+                      nameOfDay !== this.state.emptyWed &&
+                      nameOfDay !== this.state.emptyThu && (
                         <TouchableOpacity
                           onPress={() => {
                             // let lists = [];
@@ -323,7 +312,7 @@ export default class App extends React.Component {
                                     ? {fontSize: 7, color: Colors.semiPink}
                                     : {fontSize: 7, color: Colors.black}
                                 }>
-                                {item[0]}
+                                {nameOfDay}
                               </Text>
                               <Text
                                 style={
@@ -340,7 +329,7 @@ export default class App extends React.Component {
                                         fontWeight: 'bold',
                                       }
                                 }>
-                                {item[1]}
+                                {dateOfDay}
                               </Text>
                               <Text
                                 style={
@@ -349,7 +338,7 @@ export default class App extends React.Component {
                                     ? {fontSize: 9, color: Colors.semiPink}
                                     : {fontSize: 9, color: Colors.black}
                                 }>
-                                {item[2]}
+                                {month}
                               </Text>
                             </View>
                           </CardView>
