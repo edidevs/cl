@@ -5,7 +5,6 @@ let pushDeal = (item, day) => {
 };
 
 export const show = (stateVal, setState) => {
-  console.log('SET STATE', setState);
   let sun = [];
   let mon = [];
   let tue = [];
