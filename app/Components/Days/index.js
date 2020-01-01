@@ -19,6 +19,7 @@ export const Days = ({
   idx,
   selectDeals,
   stateObj,
+  executeDeals,
 }) => (
   <View style={styles.mainContainer}>
     <FlatList
@@ -42,7 +43,12 @@ export const Days = ({
             <TouchableOpacity
               onPress={() => {
                 // eslint-disable-next-line radix
-                selectDeals(parseInt(dayOfTheWeek), index, stateObj);
+                executeDeals(
+                  selectDeals,
+                  parseInt(dayOfTheWeek),
+                  index,
+                  stateObj,
+                );
               }}
               style={{height: 70, marginLeft: 0}}>
               <CardView

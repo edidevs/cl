@@ -1,3 +1,4 @@
+//Select DEALS REFACTOR
 let findMaxDiscount = arr => {
   let discounts = [];
   arr.map(item => {
@@ -23,10 +24,11 @@ let findIndexOfMaxDisount = val => {
   return indexOfMaxValue;
 };
 
-let getEachDeal = async (day, index, stateObj) => {
+let getEachDeal = async (day, index) => {
   let discount = await findMaxDiscount(day);
   let idDeal = await findIndexOfMaxDisount(day);
-  stateObj.setState({
+
+  return {
     allDeal: day,
     selected: true,
     index: index,
@@ -35,21 +37,21 @@ let getEachDeal = async (day, index, stateObj) => {
     selectedDeal: false,
     activeDate: true,
     idDeal: idDeal,
-  });
+  };
 };
 
 export const selectDeals = (value, index, stateObj) => {
   let daysInWeek = [
-    stateObj.sun,
-    stateObj.mon,
-    stateObj.tue,
-    stateObj.wed,
-    stateObj.thu,
-    stateObj.fri,
-    stateObj.sat,
+    stateObj[0],
+    stateObj[1],
+    stateObj[2],
+    stateObj[3],
+    stateObj[4],
+    stateObj[5],
+    stateObj[6],
   ];
   if (daysInWeek[value - 1].length > 0) {
-    getEachDeal(daysInWeek[value - 1], index, stateObj);
+    return getEachDeal(daysInWeek[value - 1], index, stateObj);
   } else {
     selectDeals(value + 1, index + 1, stateObj);
   }

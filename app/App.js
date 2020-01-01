@@ -9,27 +9,20 @@ import {View, Text, StyleSheet} from 'react-native';
 import {Deals} from './Components/Deals/';
 import {Days} from './Components/Days/';
 import {show} from './utils/showData';
-import {onGetData} from './utils/onGetData';
+// import {onGetData} from './utils/onGetData';
 import {checkEmpty} from './utils/checkEmpty';
 import {selectDeals} from './utils/selectDeals';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    const that = this;
     this.state = {
+      dataDeals: null,
       currentDate: new Date(),
       markedDate: moment(new Date()).format('YYYY-MM-DD'),
       data: null,
       success: false,
       active: false,
       id: null,
-      sun: null,
-      mon: null,
-      tue: null,
-      wed: null,
-      thu: null,
-      fri: null,
-      sat: null,
       selected: false,
       all: null,
       index: null,
@@ -46,34 +39,88 @@ export default class App extends React.Component {
       emptySat: null,
       idDeal: null,
       allDeal: null,
-      setState: function(obj) {
-        that.setState(obj);
-      },
+      dataDummy: null,
     };
   }
+
+  //call api
+  onGetData = async () => {
+    await fetch(
+      'https://ulo.life/api/timeslots?provider_id=7c8ea264-2cd3-4e5b-8f40-46a1a6fda174&sort_by=created_at&order=asc&app_version=1.10.0',
+    )
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({
+          dataDummy: responseJson,
+          success: true,
+        });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   onPressDeal = nextState => {
     this.setState(nextState);
   };
 
+  saveToState = async (cb, val) => {
+    let data = await cb(val);
+    this.setState({
+      dataDeals: data,
+    });
+  };
+
+  checkDay = (val, cb) => {
+    let emptyArr = cb();
+    val.map(item => {
+      for (let i = 1; i <= 7; i++) {
+        if (item.day[i.toString()] && item.day[i.toString()].length < 1) {
+          this.setState(emptyArr[i - 1]);
+        }
+      }
+    });
+  };
+
+  executeDeals = async (cb, value, index, dataDeal) => {
+    let data = await cb(value, index, dataDeal);
+    this.setState({
+      allDeal: data.allDeal,
+      selected: data.selected,
+      index: data.index,
+      discount: data.discount,
+      active: data.active,
+      selectedDeal: data.selectedDeal,
+      activeDate: data.activeDate,
+      idDeal: data.idDeal,
+    });
+  };
+
   async componentDidMount() {
-    await onGetData(this.state.setState);
-    await show(this.state.data, this.state.setState);
-    await checkEmpty(this.state.all, this.state.setState);
-    await selectDeals(new Date().getDay() + 1, 0, this.state);
+    await this.onGetData();
+
+    await show(this.state.dataDummy);
+
+    await this.saveToState(show, this.state.dataDummy);
+
+    await this.checkDay(this.state.dataDeals[7], checkEmpty);
+
+    await this.executeDeals(
+      selectDeals,
+      new Date().getDay() + 1,
+      0,
+      this.state.dataDeals,
+    );
   }
 
   render() {
-    //generate dates
-    // let listDates = dates();
-
     return (
       <View style={{flex: 4}}>
         <Text style={styles.heading1}>Daily Deals</Text>
 
         {this.state.success === true &&
-          this.state.data != null &&
-          this.state.data.data.length > 0 && (
+          this.state.dataDummy != null &&
+          this.state.dataDummy.data.length > 0 && (
             <View style={{flex: 1}}>
               <Days
                 emptySat={this.state.emptySat}
@@ -86,7 +133,8 @@ export default class App extends React.Component {
                 selected={this.state.selected}
                 idx={this.state.index}
                 selectDeals={selectDeals}
-                stateObj={this.state}
+                executeDeals={this.executeDeals}
+                stateObj={this.state.dataDeals}
               />
 
               <Deals

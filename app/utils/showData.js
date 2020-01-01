@@ -4,7 +4,8 @@ let pushDeal = (item, day) => {
   }
 };
 
-export const show = (stateVal, setState) => {
+//receive data as props without state, pure function
+export const show = value => {
   let sun = [];
   let mon = [];
   let tue = [];
@@ -13,9 +14,9 @@ export const show = (stateVal, setState) => {
   let fri = [];
   let sat = [];
   let days = [sun, mon, tue, wed, thu, fri, sat];
-
   let all = [];
-  stateVal.data.map(item => {
+
+  value.data.map(item => {
     for (let i = 0; i < days.length; i++) {
       if (item.day_of_week === i) {
         pushDeal(item, days[i]);
@@ -31,14 +32,6 @@ export const show = (stateVal, setState) => {
     {day: {'6': fri}},
     {day: {'7': sat}},
   );
-  setState({
-    sun: sun,
-    mon: mon,
-    tue: tue,
-    wed: wed,
-    thu: thu,
-    fri: fri,
-    sat: sat,
-    all: all,
-  });
+
+  return [sun, mon, tue, wed, thu, fri, sat, all];
 };
