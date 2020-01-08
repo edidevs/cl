@@ -1,6 +1,3 @@
-/* eslint-disable eslint-comments/no-unused-disable */
-/* eslint-disable radix */
-/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 const moment = require('moment');
 
