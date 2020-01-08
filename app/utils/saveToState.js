@@ -33,9 +33,5 @@ export const saveToState = val => {
   );
 
   let data = [sun, mon, tue, wed, thu, fri, sat, all];
-  console.log('DATA DATA', data);
-  // this.setState({
-  //   dataDeals: data,
-  // });
   return data;
 };
