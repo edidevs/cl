@@ -24,9 +24,9 @@ let findIndexOfMaxDisount = val => {
   return indexOfMaxValue;
 };
 
-let getEachDeal = async (day, index) => {
-  let discount = await findMaxDiscount(day);
-  let idDeal = await findIndexOfMaxDisount(day);
+let getEachDeal = (day, index) => {
+  let discount = findMaxDiscount(day);
+  let idDeal = findIndexOfMaxDisount(day);
 
   return {
     allDeal: day,

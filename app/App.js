@@ -9,6 +9,7 @@ import {show} from './utils/showData';
 // import {onGetData} from './utils/onGetData';
 import {checkEmpty} from './utils/checkEmpty';
 import {selectDeals} from './utils/selectDeals';
+import main from './styles/main';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -61,8 +62,8 @@ export default class App extends React.Component {
     this.setState(nextState);
   };
 
-  saveToState = async (cb, val) => {
-    let data = await cb(val);
+  saveToState = (cb, val) => {
+    let data = cb(val);
     this.setState({
       dataDeals: data,
     });
@@ -79,8 +80,8 @@ export default class App extends React.Component {
     });
   };
 
-  executeDeals = async (cb, value, index, dataDeal) => {
-    let data = await cb(value, index, dataDeal);
+  executeDeals = (cb, value, index, dataDeal) => {
+    let data = cb(value, index, dataDeal);
     this.setState({
       allDeal: data.allDeal,
       selected: data.selected,
@@ -96,13 +97,13 @@ export default class App extends React.Component {
   async componentDidMount() {
     await this.onGetData();
 
-    await show(this.state.dataDummy);
+    show(this.state.dataDummy);
 
-    await this.saveToState(show, this.state.dataDummy);
+    this.saveToState(show, this.state.dataDummy);
 
-    await this.checkDay(this.state.dataDeals[7], checkEmpty);
+    this.checkDay(this.state.dataDeals[7], checkEmpty);
 
-    await this.executeDeals(
+    this.executeDeals(
       selectDeals,
       new Date().getDay() + 1,
       0,
@@ -113,7 +114,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={{flex: 4}}>
-        <Text style={styles.heading1}>Daily Deals</Text>
+        <Text style={main.heading1}>Daily Deals</Text>
 
         {this.state.success === true &&
           this.state.dataDummy != null &&
@@ -148,77 +149,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  mainContainer: {
-    paddingRight: 0,
-    paddingLeft: 25,
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
-  containerDeals: {
-    flex: 1,
-    height: 200,
-    marginTop: 0,
-    paddingRight: 0,
-    paddingLeft: 0,
-    paddingTop: 0,
-    paddingBottom: 0,
-    backgroundColor: '#F9F9F9',
-  },
-  subContainerDeals: {
-    paddingRight: 0,
-    paddingLeft: 25,
-    paddingTop: 0,
-    paddingBottom: 0,
-  },
-  dealCardStyle: {
-    flex: 1,
-    marginTop: 0,
-    height: 80,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  activeDeal: {
-    width: 103,
-    height: 60,
-    backgroundColor: '#FB4D63',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inActiveDeal: {
-    width: 103,
-    height: 60,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textDeal: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 20,
-    marginBottom: 15,
-  },
-  heading1: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 0,
-    paddingRight: 0,
-    paddingLeft: 28,
-    paddingTop: 20,
-    paddingBottom: 3,
-  },
-  dayCard: {
-    backgroundColor: '#F2F2F2',
-    paddingLeft: 10,
-    paddingTop: 5,
-    width: 52,
-    height: 55,
-    borderRightWidth: 1,
-    borderStyle: 'solid',
-    borderRightColor: 'red',
-    borderRadius: 2,
-  },
-});

@@ -1,0 +1,75 @@
+import {StyleSheet} from 'react-native';
+
+export default StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  mainContainer: {
+    paddingRight: 0,
+    paddingLeft: 25,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  containerDeals: {
+    flex: 1,
+    height: 200,
+    marginTop: 0,
+    paddingRight: 0,
+    paddingLeft: 0,
+    paddingTop: 0,
+    paddingBottom: 0,
+    backgroundColor: '#F9F9F9',
+  },
+  subContainerDeals: {
+    paddingRight: 0,
+    paddingLeft: 25,
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+  dealCardStyle: {
+    flex: 1,
+    marginTop: 0,
+    height: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeDeal: {
+    width: 103,
+    height: 60,
+    backgroundColor: '#FB4D63',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inActiveDeal: {
+    width: 103,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textDeal: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 20,
+    marginBottom: 15,
+  },
+  heading1: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 0,
+    paddingRight: 0,
+    paddingLeft: 28,
+    paddingTop: 20,
+    paddingBottom: 3,
+  },
+  dayCard: {
+    backgroundColor: '#F2F2F2',
+    paddingLeft: 10,
+    paddingTop: 5,
+    width: 52,
+    height: 55,
+    borderRightWidth: 1,
+    borderStyle: 'solid',
+    borderRightColor: 'red',
+    borderRadius: 2,
+  },
+});
