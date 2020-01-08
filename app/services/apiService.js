@@ -13,7 +13,7 @@ const create = (baseURL = Config.API_URL) => {
     timeout: 10000,
   });
 
-  const getData = () => api.get('');
+  const getData = params => api.get('timeslots', params);
 
   return {
     getData,
