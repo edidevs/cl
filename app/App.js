@@ -1,7 +1,7 @@
 import React from 'react';
 const moment = require('moment');
 
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text} from 'react-native';
 
 import {Deals} from './Components/Deals/';
 import {Days} from './Components/Days/';
@@ -10,6 +10,7 @@ import {show} from './utils/showData';
 import {checkEmpty} from './utils/checkEmpty';
 import {selectDeals} from './utils/selectDeals';
 import main from './styles/main';
+import api from '../app/services/apiService';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -43,13 +44,11 @@ export default class App extends React.Component {
 
   //call api
   onGetData = async () => {
-    await fetch(
-      'https://ulo.life/api/timeslots?provider_id=7c8ea264-2cd3-4e5b-8f40-46a1a6fda174&sort_by=created_at&order=asc&app_version=1.10.0',
-    )
-      .then(response => response.json())
+    await api
+      .getData()
       .then(responseJson => {
         this.setState({
-          dataDummy: responseJson,
+          dataDummy: responseJson.data,
           success: true,
         });
       })
