@@ -126,13 +126,7 @@ export default class App extends React.Component {
           this.state.dataDummy.data.length > 0 && (
             <View style={{flex: 1}}>
               <Days
-                emptySat={this.state.emptySat}
-                emptySun={this.state.emptySun}
-                emptyMon={this.state.emptyMon}
-                emptyTue={this.state.emptyTue}
-                emptyWed={this.state.emptyWed}
-                emptyThu={this.state.emptyThu}
-                emptyFri={this.state.emptyFri}
+                state={this.state}
                 selected={this.state.selected}
                 idx={this.state.index}
                 selectDeals={selectDeals}

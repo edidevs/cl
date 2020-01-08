@@ -8,18 +8,12 @@ import styles from './styles/styles';
 let listDates = dates();
 
 export const Days = ({
-  emptySat,
-  emptyFri,
-  emptySun,
-  emptyMon,
-  emptyTue,
-  emptyWed,
-  emptyThu,
   selected,
   idx,
   selectDeals,
   stateObj,
   executeDeals,
+  state,
 }) => (
   <View style={styles.mainContainer}>
     <FlatList
@@ -33,13 +27,13 @@ export const Days = ({
         const month = item[2];
 
         return (
-          nameOfDay !== emptySat &&
-          nameOfDay !== emptyFri &&
-          nameOfDay !== emptySun &&
-          nameOfDay !== emptyMon &&
-          nameOfDay !== emptyTue &&
-          nameOfDay !== emptyWed &&
-          nameOfDay !== emptyThu && (
+          nameOfDay !== state.emptySat &&
+          nameOfDay !== state.emptyFri &&
+          nameOfDay !== state.emptySun &&
+          nameOfDay !== state.emptyMon &&
+          nameOfDay !== state.emptyTue &&
+          nameOfDay !== state.emptyWed &&
+          nameOfDay !== state.emptyThu && (
             <TouchableOpacity
               onPress={() => {
                 // eslint-disable-next-line radix
