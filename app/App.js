@@ -5,10 +5,9 @@ import {View, Text} from 'react-native';
 
 import {Deals} from './Components/Deals/';
 import {Days} from './Components/Days/';
-import {show} from './utils/showData';
 // import {onGetData} from './utils/onGetData';
-import {checkEmpty} from './utils/checkEmpty';
 import {selectDeals} from './utils/selectDeals';
+import {saveToState} from './utils/saveToState';
 import main from './styles/main';
 import api from '../app/services/apiService';
 export default class App extends React.Component {
@@ -66,15 +65,23 @@ export default class App extends React.Component {
     this.setState(nextState);
   };
 
-  saveToState = (cb, val) => {
-    let data = cb(val);
+  saveToModel = val => {
+    let results = saveToState(val);
     this.setState({
-      dataDeals: data,
+      dataDeals: results,
     });
   };
 
-  checkDay = (val, cb) => {
-    let emptyArr = cb();
+  checkDay = val => {
+    let emptyArr = [
+      {emptySun: 'SUN'},
+      {emptyMon: 'MON'},
+      {emptyTue: 'TUE'},
+      {emptyWed: 'WED'},
+      {emptyThu: 'THU'},
+      {emptyFri: 'FRI'},
+      {emptySat: 'SAT'},
+    ];
     val.map(item => {
       for (let i = 1; i <= 7; i++) {
         if (item.day[i.toString()] && item.day[i.toString()].length < 1) {
@@ -84,8 +91,8 @@ export default class App extends React.Component {
     });
   };
 
-  executeDeals = (cb, value, index, dataDeal) => {
-    let data = cb(value, index, dataDeal);
+  executeDeals = (value, index, dataDeal) => {
+    let data = selectDeals(value, index, dataDeal);
     this.setState({
       allDeal: data.allDeal,
       selected: data.selected,
@@ -101,18 +108,12 @@ export default class App extends React.Component {
   async componentDidMount() {
     await this.onGetData();
 
-    show(this.state.dataDummy);
+    // this.saveToState(this.state.dataDummy);
+    this.saveToModel(this.state.dataDummy);
 
-    this.saveToState(show, this.state.dataDummy);
+    this.checkDay(this.state.dataDeals[7]);
 
-    this.checkDay(this.state.dataDeals[7], checkEmpty);
-
-    this.executeDeals(
-      selectDeals,
-      new Date().getDay() + 1,
-      0,
-      this.state.dataDeals,
-    );
+    this.executeDeals(new Date().getDay() + 1, 0, this.state.dataDeals);
   }
 
   render() {

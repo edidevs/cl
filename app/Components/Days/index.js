@@ -43,12 +43,7 @@ export const Days = ({
             <TouchableOpacity
               onPress={() => {
                 // eslint-disable-next-line radix
-                executeDeals(
-                  selectDeals,
-                  parseInt(dayOfTheWeek),
-                  index,
-                  stateObj,
-                );
+                executeDeals(parseInt(dayOfTheWeek), index, stateObj);
               }}
               style={{height: 70, marginLeft: 0}}>
               <CardView
