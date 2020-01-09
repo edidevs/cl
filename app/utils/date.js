@@ -42,3 +42,23 @@ let pad = n => {
 export const dates = () => {
   return list();
 };
+
+/**
+ * Gets the next 14 available dates for provider starting from today.
+ *
+ * @param {Array.<Object>} availabilityData Data about provider's availailability. See structure in app/utils/transform.js
+ * @returns {Array.<Date>} Available dates for selection.
+ */
+const getAvailableDates = (availabilityData) => {};
+
+export {getAvailableDates};
+
+/**
+ * Gets the closest available date from an array of Dates.
+ *
+ * @param {Array.<Date>} dates Dates.
+ * @returns {Date} Closest date available for selection.
+ */
+const getSelectedDate = (dates) => {};
+
+export {getSelectedDate};

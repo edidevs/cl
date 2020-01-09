@@ -9,116 +9,56 @@ import {Days} from './Components/Days/';
 import {selectDeals} from './utils/selectDeals';
 import {saveToState} from './utils/saveToState';
 import main from './styles/main';
-import api from '../app/services/apiService';
+import {transform} from './utils/transform';
+import ProviderAPIService from '../app/services/ProviderAPIService';
+import {getAvailableDates, getSelectedDate} from './utils/date';
+import {getBestTimeSlot} from './utils/timeslot';
+
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataDeals: null,
-      currentDate: new Date(),
-      markedDate: moment(new Date()).format('YYYY-MM-DD'),
-      data: null,
-      success: false,
-      active: false,
-      id: null,
-      selected: false,
-      all: null,
-      index: null,
-      discount: null,
-      selectedDeal: false,
-      activeDate: false,
-      emptyDate: null,
-      emptySun: null,
-      emptyMon: null,
-      emptyTue: null,
-      emptyWed: null,
-      emptyThu: null,
-      emptyFri: null,
-      emptySat: null,
-      idDeal: null,
-      allDeal: null,
-      dataDummy: null,
+      availableDates: [],
+      selectedDate: null,
+      selectedTimeslot: null,
     };
   }
 
-  //call api
-  onGetData = async () => {
-    await api
-      .getData({
-        provider_id: '7c8ea264-2cd3-4e5b-8f40-46a1a6fda174',
-        sort_by: 'created_at',
-        order: 'asc',
-        app_version: '1.10.0',
-      })
-      .then(responseJson => {
-        this.setState({
-          dataDummy: responseJson.data,
-          success: true,
-        });
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  onPressDeal = nextState => {
-    this.setState(nextState);
-  };
-
-  saveToModel = val => {
-    let results = saveToState(val);
-    this.setState({
-      dataDeals: results,
-    });
-  };
-
-  checkDay = val => {
-    let emptyArr = [
-      {emptySun: 'SUN'},
-      {emptyMon: 'MON'},
-      {emptyTue: 'TUE'},
-      {emptyWed: 'WED'},
-      {emptyThu: 'THU'},
-      {emptyFri: 'FRI'},
-      {emptySat: 'SAT'},
-    ];
-    val.map(item => {
-      for (let i = 1; i <= 7; i++) {
-        if (item.day[i.toString()] && item.day[i.toString()].length < 1) {
-          this.setState(emptyArr[i - 1]);
-        }
-      }
-    });
-  };
-
-  executeDeals = (value, index, dataDeal) => {
-    let data = selectDeals(value, index, dataDeal);
-    this.setState({
-      allDeal: data.allDeal,
-      selected: data.selected,
-      index: data.index,
-      discount: data.discount,
-      active: data.active,
-      selectedDeal: data.selectedDeal,
-      activeDate: data.activeDate,
-      idDeal: data.idDeal,
-    });
-  };
-
   async componentDidMount() {
-    await this.onGetData();
+    const providerId = '7c8ea264-2cd3-4e5b-8f40-46a1a6fda174';
+    const data = await ProviderAPIService.getProviderByID(providerId);
+    const availabilityData = transform(data);
+    const availableDates = getAvailableDates(availabilityData);
+    const selectedDate = getSelectedDate(availableDates);
+    const selectedTimeslot = getBestTimeSlot(availabilityData, selectedDate);
 
-    // this.saveToState(this.state.dataDummy);
-    this.saveToModel(this.state.dataDummy);
-
-    this.checkDay(this.state.dataDeals[7]);
-
-    this.executeDeals(new Date().getDay() + 1, 0, this.state.dataDeals);
+    // Disabling eslint rule to set data in state without using Redux / HOC.
+    // Not required during this test.
+    // See https://reactjs.org/docs/react-component.html#componentdidmount
+    // eslint-disable-next-line react/no-did-mount-set-state
+    this.setState({
+      availableDates,
+      selectedDate,
+      selectedTimeslot,
+    });
   }
 
+  onSelectDate = date => {
+    this.setState({selectedDate: date});
+  };
+
+  onSelectTimeslot = timeslot => {
+    this.setState({selectedTimeslot: timeslot});
+  };
+
+  // @todo Change render function implementation to use the data structure for state.
+  // i.e. only use availableDates, selectedDate, selectedTimeslot
+  // Also only use callbacks this.onSelectDate and this.onSelectTimeslot for onPress.
+  // Implementation of <Dates> and <Deals> will need to change.
+  // Also note to solve eslint issues, e.g. no inline styles etc.
   render() {
     return (
-      <View style={{flex: 4}}>
+      <View>
         <Text style={main.heading1}>Daily Deals</Text>
 
         {this.state.success === true &&
